@@ -1,5 +1,6 @@
-# InstaPuppeteer
-A puppeteer implementation to crawl and parse Instagram images
+# InstaParser
+A simple implementation to crawl and parse Instagram images
+- Built with node
 
 ### TODOS
 - [ ] Integrate Express
