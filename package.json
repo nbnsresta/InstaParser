@@ -4,6 +4,7 @@
   "description": "A simple Instagram Image Parser",
   "main": "index.js",
   "dependencies": {
+    "opn": "^5.4.0",
     "request": "^2.88.0"
   },
   "devDependencies": {},

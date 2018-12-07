@@ -1,12 +1,11 @@
 const request = require('request');
+const opn = require('opn');
 
 (async function main() {
   try {
-    request('https://www.instagram.com/p/BqIdiYBlJzA/', function (error, response, body) {
-      var $ = cheerio.load(body);
-      console.log(parseImageUrl(body));
-
-      
+    request('https://www.instagram.com/p/Bq979jFB422/', function (error, response, body) {
+      const images = parseImageUrl(body);
+      images.forEach((image) => opn(image));
     });
 
   }
@@ -30,7 +29,11 @@ function parseImageUrl(text){
   const postPage = _content['entry_data']['PostPage']
 
   const gqNode = postPage.find(({graphql}) => (graphql))
-  const url = gqNode["graphql"]["shortcode_media"]["display_url"]
+  const media = gqNode["graphql"]["shortcode_media"]
+  if(media["edge_sidecar_to_children"]){
+    return media["edge_sidecar_to_children"]["edges"].map(({node}) => node["display_url"])
+  }
+  return [media["display_url"]]
+  //const isVideo = gqNode["graphql"]["shortcode_media"]["is_video"]
 
-  return url
 }
