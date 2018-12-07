@@ -1,27 +1,36 @@
-const puppeteer = require("puppeteer");
+const request = require('request');
 
 (async function main() {
   try {
-    const browser = await puppeteer.launch({
-      headless: true,
-      timeout: 3000000
+    request('https://www.instagram.com/p/BqIdiYBlJzA/', function (error, response, body) {
+      var $ = cheerio.load(body);
+      console.log(parseImageUrl(body));
+
+      
     });
-    const page = await browser.newPage();
 
-    await page.goto("https://www.instagram.com/p/BqIdiYBlJzA/",
-      { timeout: 30000 });
-
-    console.log("now fetching");
-    await page.waitForSelector("article");
-
-    const images = await page.$$("img.FFVAD");
-
-    for (const image of images) {
-      const src = await page.evaluate(image => image.src, image)
-      console.log(src);
-    }
   }
   catch (e) {
     console.log("Error occured", e)
   }
 })();
+
+
+function parseImageUrl(text){
+  
+  const regex =/(\<script\stype\="text\/javascript">window\._sharedData\s=)(.+)(;\<\/script\>)/im
+
+  const state = text.match(regex)
+
+  let content = state[2];
+  //content = content.replace("\\",'.');
+
+  const _content = JSON.parse(content)
+
+  const postPage = _content['entry_data']['PostPage']
+
+  const gqNode = postPage.find(({graphql}) => (graphql))
+  const url = gqNode["graphql"]["shortcode_media"]["display_url"]
+
+  return url
+}
