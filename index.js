@@ -3,11 +3,11 @@ const opn = require('opn');
 
 (async function main() {
   try {
-    request('https://www.instagram.com/p/Bq979jFB422/', function (error, response, body) {
-      const images = parseImageUrl(body);
-      images.forEach((image) => opn(image));
+    request('https://www.instagram.com/p/BrF6sJ6lrgK/', function (error, response, body) {
+      const parsedObject = extractJSON(body)
+      const urlContents = extractMediaContents(parsedObject)
+      urlContents.forEach((item) => opn(item));
     });
-
   }
   catch (e) {
     console.log("Error occured", e)
@@ -15,25 +15,30 @@ const opn = require('opn');
 })();
 
 
-function parseImageUrl(text){
-  
+function extractJSON(element){
   const regex =/(\<script\stype\="text\/javascript">window\._sharedData\s=)(.+)(;\<\/script\>)/im
 
-  const state = text.match(regex)
+  const state = element.match(regex)
 
   let content = state[2];
   //content = content.replace("\\",'.');
 
-  const _content = JSON.parse(content)
+  return JSON.parse(content)
+}
 
-  const postPage = _content['entry_data']['PostPage']
+function extractMediaContents(parsedObject){
+  const postPage = parsedObject['entry_data']['PostPage']
 
   const gqNode = postPage.find(({graphql}) => (graphql))
   const media = gqNode["graphql"]["shortcode_media"]
+  const isVideo = media["is_video"]
+  
+  if(isVideo){
+    const videoUrl = media["video_url"]
+    return [videoUrl]
+  }
   if(media["edge_sidecar_to_children"]){
     return media["edge_sidecar_to_children"]["edges"].map(({node}) => node["display_url"])
   }
   return [media["display_url"]]
-  //const isVideo = gqNode["graphql"]["shortcode_media"]["is_video"]
-
 }
