@@ -10,5 +10,5 @@ A simple implementation to crawl and parse Instagram images
 - [ ] Integrate Express
 - [x] Parse single image
 - [x] Parse array of images
-- [ ] Parse profile image
-- [ ] Parse video url
+- [x] Parse profile image
+- [x] Parse video/s url
