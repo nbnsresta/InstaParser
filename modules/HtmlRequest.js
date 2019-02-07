@@ -1,9 +1,9 @@
 const request = require('request')
+const { instagramUrlRegex } = require('./regex')
 
-const jsonExtractionRegex = /(\<script\stype\="text\/javascript">window\._sharedData\s=)(.+)(;\<\/script\>)/im;
-
-export default function (requestUrl) {
-  let url = requestUrl.match(instagramUrlRegex)[0]
+module.exports = function (requestUrl) {
+  console.log("URL is ", requestUrl)
+  const url = requestUrl.match(instagramUrlRegex)[0]
   const promise = new Promise()
   if (!url) {
     promise.reject("Invalid URL")
@@ -11,8 +11,7 @@ export default function (requestUrl) {
 
   request(url, function (error, response, body) {
     if (error) {
-      console.log("Invalid URL..")
-      promise.reject()
+      promise.reject("Invalid URL")
     }
     const json = extractJSON(body)
     json ? promise.resolve(json) : promise.reject()
