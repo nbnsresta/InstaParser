@@ -2,20 +2,25 @@ const { extractDPImageUrl, extractMediaContents } = require('./modules/parsers')
 const { isPost, isProfile, isInstagramUrl } = require('./modules/Validator')
 const parseContents = require('./modules/HtmlRequest')
 
-(function main() {
-  try {
-    let requestUrl = "https://www.instagram.com/nbnsresta/"
+try {
+    const requestUrl = "https://www.instagram.com/p/BtoScvngQBW/?utm_source=ig_web_button_share_sheet"
 
     if (isInstagramUrl(requestUrl)) {
       if (isPost(requestUrl)) {
         parseContents(requestUrl)
-          .done(data => extractMediaContents(data))
-          .error(() => console.log("Parse Error"))
+          .then(data => {
+            const url = extractMediaContents(data)
+            console.log(url)
+          })
+          .catch(() => console.log("Parse Error"))
       }
       else if (isProfile(requestUrl)) {
         parseContents(requestUrl)
-          .done(data => extractDPImageUrl(data))
-          .error(() => console.log("Parse Error"))
+          .then(data => {
+            const url = extractDPImageUrl(data)
+            console.log(url)
+          })
+          .catch(message => console.log(message))
       }
     }
     else {
@@ -25,5 +30,3 @@ const parseContents = require('./modules/HtmlRequest')
   catch (e) {
     console.log("Error occured", e)
   }
-})()
-

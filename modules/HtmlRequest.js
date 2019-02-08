@@ -1,27 +1,24 @@
-const request = require('request')
-const { instagramUrlRegex } = require('./regex')
+const request = require("request");
+const { instagramUrlRegex, jsonExtractionRegex } = require("./regex");
 
-module.exports = function (requestUrl) {
-  console.log("URL is ", requestUrl)
-  const url = requestUrl.match(instagramUrlRegex)[0]
-  const promise = new Promise()
-  if (!url) {
-    promise.reject("Invalid URL")
-  }
+module.exports = function(requestUrl) {
+  const url = requestUrl.match(instagramUrlRegex)[0];
 
-  request(url, function (error, response, body) {
-    if (error) {
-      promise.reject("Invalid URL")
-    }
-    const json = extractJSON(body)
-    json ? promise.resolve(json) : promise.reject()
-  })
-  return promise
-}
+  return new Promise(function(resolve, reject) {
+    url || reject("Invalid URL");
+
+    request(url, function(error, response, body) {
+      error && reject("Error on request");
+
+      const json = extractJSON(body);
+      json ? resolve(json) : reject("Error parsing content");
+    });
+  });
+};
 
 function extractJSON(element) {
-  const state = element.match(jsonExtractionRegex)
+  const state = element.match(jsonExtractionRegex);
   if (state && state.length >= 3) {
-    return JSON.parse[2]
+    return JSON.parse(state[2]);
   }
 }
