@@ -1,7 +1,7 @@
 const handleUrl = require('./modules/urlInterface')
 const opn = require('opn')
 
-const url = 'https://www.instagram.com/elna_stha'
+const url = 'https://www.instagram.com/p/BrnUYUbBm57'
 
 handleUrl(url)
   .then(urlSet => {

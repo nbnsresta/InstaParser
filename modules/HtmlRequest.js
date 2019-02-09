@@ -8,19 +8,19 @@ module.exports = function(requestUrl) {
     url || reject("Invalid URL");
 
     request(url, function(error, response, body) {
-      console.log(url)
-      if(error) console.log(error)
+      console.log(url);
+      if (error) console.log(error);
       error && reject("Error on page request");
 
       const json = extractJSON(body);
       json ? resolve(json) : reject("Error parsing content");
     });
   });
-};
 
-function extractJSON(element) {
-  const state = element.match(jsonExtractionRegex);
-  if (state && state.length >= 3) {
-    return JSON.parse(state[2]);
+  function extractJSON(element) {
+    const state = element.match(jsonExtractionRegex);
+    if (state && state.length >= 3) {
+      return JSON.parse(state[2]);
+    }
   }
 }
