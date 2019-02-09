@@ -1,32 +1,10 @@
-const { extractDPImageUrl, extractMediaContents } = require('./modules/parsers')
-const { isPost, isProfile, isInstagramUrl } = require('./modules/Validator')
-const parseContents = require('./modules/HtmlRequest')
+const handleUrl = require('./modules/urlInterface')
+const opn = require('opn')
 
-try {
-    const requestUrl = "https://www.instagram.com/p/BtoScvngQBW/?utm_source=ig_web_button_share_sheet"
+const url = 'https://www.instagram.com/elna_stha'
 
-    if (isInstagramUrl(requestUrl)) {
-      if (isPost(requestUrl)) {
-        parseContents(requestUrl)
-          .then(data => {
-            const url = extractMediaContents(data)
-            console.log(url)
-          })
-          .catch(() => console.log("Parse Error"))
-      }
-      else if (isProfile(requestUrl)) {
-        parseContents(requestUrl)
-          .then(data => {
-            const url = extractDPImageUrl(data)
-            console.log(url)
-          })
-          .catch(message => console.log(message))
-      }
-    }
-    else {
-      return "Invalid Url."
-    }
-  }
-  catch (e) {
-    console.log("Error occured", e)
-  }
+handleUrl(url)
+  .then(urlSet => {
+    urlSet.map(url => opn(url))
+  })
+  .catch(message => console.log(message))

@@ -8,7 +8,9 @@ module.exports = function(requestUrl) {
     url || reject("Invalid URL");
 
     request(url, function(error, response, body) {
-      error && reject("Error on request");
+      console.log(url)
+      if(error) console.log(error)
+      error && reject("Error on page request");
 
       const json = extractJSON(body);
       json ? resolve(json) : reject("Error parsing content");
