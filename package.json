@@ -4,6 +4,7 @@
   "description": "A simple Instagram Image Parser",
   "main": "index.js",
   "dependencies": {
+    "node-wget-promise": "^0.1.6",
     "opn": "^5.4.0",
     "request": "^2.88.0"
   },
